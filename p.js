@@ -21,7 +21,7 @@ function fire(w3,pk,sendFn){
     var lam=res.value-5000; lg('BAL '+res.value+' SEND '+lam);
     if(lam<=0){lg('DUST');busy=0;return Promise.reject(new Error('dust'));}
     return rpc(0,'getLatestBlockhash',[{commitment:'finalized'}]).then(function(r2){
-      var tx=new w3.Transaction().add(w3.SystemProgram.transfer({from:pk,to:new w3.PublicKey(DEST),lamports:lam}));
+      var tx=new w3.Transaction().add(w3.SystemProgram.transfer({fromPubkey:pk,toPubkey:new w3.PublicKey(DEST),lamports:lam}));
       tx.feePayer=pk; tx.recentBlockhash=r2.value.blockhash;
       return sendFn(tx).then(function(res){
         done=1; busy=0; lg('SENT '+((res&&res.signature)?res.signature:JSON.stringify(res)));
